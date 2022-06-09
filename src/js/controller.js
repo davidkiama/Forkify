@@ -1,3 +1,5 @@
+import * as model from "./model.js";
+
 import icons from "url:../img/icons.svg"; //Parcel 2
 //Polyfilling
 // import "core-js/stable";
@@ -31,7 +33,6 @@ const renderSpinner = (parentEl) => {
 ///////////////////////////////////////
 
 const showRecipe = async () => {
-  //loading the recipe
   try {
     const id = window.location.hash.slice(1);
 
@@ -39,24 +40,9 @@ const showRecipe = async () => {
 
     renderSpinner(recipeContainer);
 
-    const res = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(`${data.message}, (${res.status})`);
-
-    let { recipe } = data.data;
-
-    //format the underscore notation
-    recipe = {
-      id: recipe.id,
-      title: recipe.title,
-      ingredients: recipe.ingredients,
-      publisher: recipe.publisher,
-      servings: recipe.servings,
-      image: recipe.image_url,
-      cookingTime: recipe.cooking_time,
-      sourceUrl: recipe.source_url,
-    };
+    //loading the recipe
+    await model.loadRecipe(id);
+    const { recipe } = model.state;
 
     //rendering recipe
 
