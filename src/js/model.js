@@ -1,4 +1,5 @@
 import { API_URL } from "./views/config";
+import { getJSON } from "./views/helpers";
 
 export const state = {
   recipe: {},
@@ -6,12 +7,9 @@ export const state = {
 
 export const loadRecipe = async (id) => {
   try {
-    const res = await fetch(`${API_URL}/${id}`);
-    const data = await res.json();
+    const { data } = await getJSON(`${API_URL}/${id}`);
 
-    if (!res.ok) throw new Error(`${data.message}, (${res.status})`);
-
-    const { recipe } = data.data;
+    const { recipe } = data;
 
     //format the underscore notation to camelCase
     state.recipe = {
@@ -25,6 +23,7 @@ export const loadRecipe = async (id) => {
       sourceUrl: recipe.source_url,
     };
   } catch (error) {
-    console.log(error);
+    //Temp error handling
+    console.error(`${error}  💥💥💥💥`);
   }
 };
