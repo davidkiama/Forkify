@@ -540,16 +540,20 @@ const controlSearchRecipes = async ()=>{
         // 2. Load search results
         await _modelJs.loadSearchResults(query);
         // 3. Display search results
-        (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPerPage(6));
+        (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPerPage(3));
         // 4. Display pagination buttons
         (0, _paginationViewJsDefault.default).render(_modelJs.state.search);
     } catch (error) {
         (0, _resultsViewJsDefault.default).renderError();
     }
 };
+const controlPagination = ()=>{
+    console.log("Pag controller");
+};
 const init = ()=>{
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchRecipes);
+    (0, _paginationViewJsDefault.default).addHandlerClick(controlPagination);
 };
 init();
 
@@ -1769,16 +1773,52 @@ var _iconsSvg = require("url:../../img/icons.svg");
 var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 class PaginationView extends (0, _viewDefault.default) {
     _parentElement = document.querySelector(".pagination");
+    addHandlerClick(handler) {
+        this._parentElement.addEventListener("click", function(e) {
+            const btn = e.target.closest(".btn--inline");
+            console.log(btn);
+            handler();
+        });
+    }
     _generateMarkup() {
+        const currentPage = this._data.page;
         const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
         // page 1 and there are other pages
-        if (this._data.page === 1 && numPages > 1) return "page 1 and other pages";
+        if (currentPage === 1 && numPages > 1) return `
+        <button class="btn--inline pagination__btn--next">
+          <span>Page ${currentPage + 1}</span>
+          <svg class="search__icon">
+            <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
+          </svg>
+        </button>
+      `;
         // last page
-        if (this._data.page === numPages && numPages > 1) return "last page";
+        if (currentPage === numPages && numPages > 1) return `
+        <button class="btn--inline pagination__btn--prev">
+          <svg class="search__icon">
+            <use href=${0, _iconsSvgDefault.default}#icon-arrow-left></use>
+          </svg>
+          <span>Page ${currentPage - 1}</span>
+        </button>
+          `;
         // in between pages
-        if (this._data.page < numPages) return "other pages";
+        if (currentPage < numPages) return `
+      <button class="btn--inline pagination__btn--next">
+        <span>Page ${currentPage + 1}</span>
+        <svg class="search__icon">
+          <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
+        </svg>
+      </button>
+
+      <button class="btn--inline pagination__btn--prev">
+        <svg class="search__icon">
+          <use href=${0, _iconsSvgDefault.default}#icon-arrow-left></use>
+        </svg>
+        <span>Page ${currentPage - 1}</span>
+      </button>
+    `;
         // page 1 and there are NO other pages
-        return "only 1 page";
+        return "";
     }
 }
 exports.default = new PaginationView();
