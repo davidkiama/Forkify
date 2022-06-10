@@ -2,11 +2,13 @@ import icons from "url:../../img/icons.svg";
 
 export default class View {
   _data;
+
   render(data) {
+    if (!data || data.length == 0) return this.renderError();
+
     this._data = data;
 
     const markup = this._generateMarkup();
-
     this._clear(); // clear the initial text
     this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }
@@ -30,7 +32,6 @@ export default class View {
 
   renderError(message = this._errorMessage) {
     const markup = `
-      
       <div class="error">
         <div>
           <svg>
@@ -47,7 +48,6 @@ export default class View {
 
   renderSuccess(message = this._successMessage) {
     const markup = `
-      
       <div class="message">
         <div>
           <svg>
