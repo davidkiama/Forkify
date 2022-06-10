@@ -512,7 +512,6 @@ var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
 //Polyfilling
 // import "core-js/stable";
 // import "regenerator-runtime/runtime";
-// https://forkify-api.herokuapp.com/v2
 ///////////////////////////////////////
 const controlRecipes = async ()=>{
     try {
@@ -528,19 +527,19 @@ const controlRecipes = async ()=>{
         (0, _recipeViewJsDefault.default).renderError();
     }
 };
-// const controlSearchRecipes = async () => {
-//   try {
-//     const query = searchView.getQuery();
-//     if (!query) return;
-//     await model.loadSearchResults(query);
-//     console.log(model.state.search.results);
-//   } catch (error) {
-//     recipeView.renderError();
-//   }
-// };
-controlSearchRecipes();
+const controlSearchRecipes = async ()=>{
+    try {
+        const query = (0, _searchViewJsDefault.default).getQuery();
+        if (!query) return;
+        await _modelJs.loadSearchResults(query);
+        console.log(_modelJs.state.search.results);
+    } catch (error) {
+        (0, _recipeViewJsDefault.default).renderError();
+    }
+};
 const init = ()=>{
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
+    (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchRecipes);
 };
 init();
 
@@ -1684,13 +1683,22 @@ Fraction.primeFactors = function(n) {
 module.exports.Fraction = Fraction;
 
 },{}],"9OQAM":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
 class SearchView {
     #parentElement = document.querySelector(".search");
     getQuery() {
-        return this.#parentElement.document.querySelector("".search__field).value;
+        return this.#parentElement.querySelector(".search__field").value;
+    }
+    addHandlerSearch(handler) {
+        this.#parentElement.addEventListener("submit", function(e) {
+            e.preventDefault();
+            handler();
+        });
     }
 }
+exports.default = new SearchView();
 
-},{}]},["2kSJi","aenu9"], "aenu9", "parcelRequire3a11")
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["2kSJi","aenu9"], "aenu9", "parcelRequire3a11")
 
 //# sourceMappingURL=index.e37f48ea.js.map
