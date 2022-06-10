@@ -1,5 +1,6 @@
 import * as model from "./model.js";
 import recipeView from "./views/recipeView.js";
+import searchView from "./views/searchView.js";
 
 //Polyfilling
 // import "core-js/stable";
@@ -28,6 +29,21 @@ const controlRecipes = async () => {
   }
 };
 
-// window.addEventListener("hashchange", controlRecipes);
-// window.addEventListener("load", controlRecipes);
-["hashchange", "load"].forEach((ev) => window.addEventListener(ev, controlRecipes));
+// const controlSearchRecipes = async () => {
+//   try {
+//     const query = searchView.getQuery();
+//     if (!query) return;
+
+//     await model.loadSearchResults(query);
+//     console.log(model.state.search.results);
+//   } catch (error) {
+//     recipeView.renderError();
+//   }
+// };
+
+controlSearchRecipes();
+const init = () => {
+  recipeView.addHandlerRender(controlRecipes);
+};
+
+init();

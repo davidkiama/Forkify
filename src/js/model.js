@@ -1,13 +1,17 @@
-import { API_URL } from "./views/config";
-import { getJSON } from "./views/helpers";
+import { API_URL } from "./config";
+import { getJSON } from "./helpers";
 
 export const state = {
   recipe: {},
+  search: {
+    query: "",
+    results: [],
+  },
 };
 
 export const loadRecipe = async (id) => {
   try {
-    const { data } = await getJSON(`${API_URL}/${id}`);
+    const { data } = await getJSON(`${API_URL}${id}`);
 
     const { recipe } = data;
 
@@ -28,3 +32,24 @@ export const loadRecipe = async (id) => {
     throw error;
   }
 };
+
+export const loadSearchResults = async (query) => {
+  try {
+    state.search.query = query;
+
+    const { data } = await getJSON(`${API_URL}?search=${query}`);
+
+    state.search.results = data.recipes.map((recipe) => {
+      return {
+        id: recipe.id,
+        title: recipe.title,
+        publisher: recipe.publisher,
+        image: recipe.image_url,
+      };
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+loadSearchResults("pizza");
