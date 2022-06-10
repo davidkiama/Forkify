@@ -540,15 +540,18 @@ const controlSearchRecipes = async ()=>{
         // 2. Load search results
         await _modelJs.loadSearchResults(query);
         // 3. Display search results
-        (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPerPage(3));
+        (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPerPage());
         // 4. Display pagination buttons
         (0, _paginationViewJsDefault.default).render(_modelJs.state.search);
     } catch (error) {
         (0, _resultsViewJsDefault.default).renderError();
     }
 };
-const controlPagination = ()=>{
-    console.log("Pag controller");
+const controlPagination = (goToPage)=>{
+    // 1. Display NEW search results
+    (0, _resultsViewJsDefault.default).render(_modelJs.getSearchResultsPerPage(goToPage));
+    // 2. Display NEW pagination buttons
+    (0, _paginationViewJsDefault.default).render(_modelJs.state.search);
 };
 const init = ()=>{
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
@@ -622,7 +625,6 @@ const loadRecipe = async (id)=>{
         };
     } catch (error) {
         //Temp error handling
-        console.error(`${error}  💥💥💥💥`);
         throw error;
     }
 };
@@ -1775,50 +1777,42 @@ class PaginationView extends (0, _viewDefault.default) {
     _parentElement = document.querySelector(".pagination");
     addHandlerClick(handler) {
         this._parentElement.addEventListener("click", function(e) {
-            const btn = e.target.closest(".btn--inline");
-            console.log(btn);
-            handler();
+            const btn = e.target.closest(".btn--inline"); //event delegation
+            if (!btn) return;
+            const goToPage = +btn.dataset.goto; //convert the dataAttr to a number
+            handler(goToPage);
         });
     }
     _generateMarkup() {
         const currentPage = this._data.page;
         const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
         // page 1 and there are other pages
-        if (currentPage === 1 && numPages > 1) return `
-        <button class="btn--inline pagination__btn--next">
-          <span>Page ${currentPage + 1}</span>
-          <svg class="search__icon">
-            <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
-          </svg>
-        </button>
-      `;
+        if (currentPage === 1 && numPages > 1) return this._nextMarkup(currentPage);
         // last page
-        if (currentPage === numPages && numPages > 1) return `
-        <button class="btn--inline pagination__btn--prev">
-          <svg class="search__icon">
-            <use href=${0, _iconsSvgDefault.default}#icon-arrow-left></use>
-          </svg>
-          <span>Page ${currentPage - 1}</span>
-        </button>
-          `;
+        if (currentPage === numPages && numPages > 1) return this._prevMarkup(currentPage);
         // in between pages
-        if (currentPage < numPages) return `
-      <button class="btn--inline pagination__btn--next">
-        <span>Page ${currentPage + 1}</span>
-        <svg class="search__icon">
-          <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
-        </svg>
-      </button>
-
-      <button class="btn--inline pagination__btn--prev">
-        <svg class="search__icon">
-          <use href=${0, _iconsSvgDefault.default}#icon-arrow-left></use>
-        </svg>
-        <span>Page ${currentPage - 1}</span>
-      </button>
-    `;
+        if (currentPage < numPages) return `${this._prevMarkup(currentPage)} ${this._nextMarkup(currentPage)}`;
         // page 1 and there are NO other pages
         return "";
+    }
+    _prevMarkup(currentPage) {
+        return `
+    <button data-goto="${currentPage - 1}" class="btn--inline pagination__btn--prev">
+      <svg class="search__icon">
+        <use href=${0, _iconsSvgDefault.default}#icon-arrow-left></use>
+      </svg>
+      <span>Page ${currentPage - 1}</span>
+    </button>
+    `;
+    }
+    _nextMarkup(currentPage) {
+        return `
+    <button data-goto="${currentPage + 1}" class="btn--inline pagination__btn--next">
+      <span>Page ${currentPage + 1}</span>
+      <svg class="search__icon">
+        <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
+      </svg>
+    </button>`;
     }
 }
 exports.default = new PaginationView();

@@ -41,7 +41,7 @@ const controlSearchRecipes = async () => {
     await model.loadSearchResults(query);
 
     // 3. Display search results
-    resultsView.render(model.getSearchResultsPerPage(3));
+    resultsView.render(model.getSearchResultsPerPage());
 
     // 4. Display pagination buttons
     paginationView.render(model.state.search);
@@ -50,8 +50,12 @@ const controlSearchRecipes = async () => {
   }
 };
 
-const controlPagination = () => {
-  console.log("Pag controller");
+const controlPagination = (goToPage) => {
+  // 1. Display NEW search results
+  resultsView.render(model.getSearchResultsPerPage(goToPage));
+
+  // 2. Display NEW pagination buttons
+  paginationView.render(model.state.search);
 };
 
 const init = () => {
