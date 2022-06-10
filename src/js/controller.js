@@ -37,7 +37,8 @@ const controlSearchRecipes = async () => {
     if (!query) return;
 
     await model.loadSearchResults(query);
-    resultsView.render(model.state.search.results);
+    // resultsView.render(model.state.search.results);
+    resultsView.render(model.getSearchResultsPerPage());
   } catch (error) {
     resultsView.renderError();
   }
