@@ -2,6 +2,7 @@ import * as model from "./model.js";
 import recipeView from "./views/recipeView.js";
 import searchView from "./views/searchView.js";
 import resultsView from "./views/resultsView.js";
+import bookmarksView from "./views/bookmarksView.js";
 import paginationView from "./views/paginationView.js";
 
 //Polyfilling
@@ -69,15 +70,18 @@ const controlServings = (newServings) => {
 };
 
 const controlAddBookmark = () => {
-  console.log(model.state.recipe.bookmarked);
+  // 1. Add or remove bookmark
   if (!model.state.recipe.bookmarked) {
     model.addBookmark(model.state.recipe);
   } else {
     model.removeBookmark(model.state.recipe.id);
   }
 
-  //re render the view
+  // 2. Render the recipe view
   recipeView.update(model.state.recipe);
+
+  // 3. Render bookmarks
+  bookmarksView.render(model.state.bookmarks);
 };
 
 const init = () => {
