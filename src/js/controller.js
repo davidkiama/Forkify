@@ -19,6 +19,9 @@ const controlRecipes = async () => {
     // display a spinner before data arrives
     recipeView.renderSpinner();
 
+    // 0. Upadate the active recipe
+    resultsView.update(model.getSearchResultsPerPage());
+
     // 1. loading the recipe
     await model.loadRecipe(id);
 
