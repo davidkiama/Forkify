@@ -650,6 +650,7 @@ const loadSearchResults = async (query)=>{
                 image: recipe.image_url
             };
         });
+        state.search.page = 1; //resetting the page num
     } catch (error) {
         throw error;
     }
