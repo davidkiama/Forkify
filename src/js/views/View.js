@@ -30,9 +30,17 @@ export default class View {
       const currEl = curElements[i];
 
       //update the DOM only where it changed
+
+      //Updates the TEXT
       if (!newEl.isEqualNode(currEl) && newEl.firstChild.nodeValue.trim() !== "") {
-        console.log(newEl.firstChild?.nodeValue.trim());
         currEl.textContent = newEl.textContent;
+      }
+
+      //Updates the ATTRIBUTES
+      if (!newEl.isEqualNode(currEl)) {
+        Array.from(newEl.attributes).forEach((attr) => {
+          currEl.setAttribute(attr.name, attr.value);
+        });
       }
     });
   }

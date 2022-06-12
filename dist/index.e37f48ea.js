@@ -1418,10 +1418,12 @@ class View {
         newElements.forEach((newEl, i)=>{
             const currEl = curElements[i];
             //update the DOM only where it changed
-            if (!newEl.isEqualNode(currEl) && newEl.firstChild.nodeValue.trim() !== "") {
-                console.log(newEl.firstChild?.nodeValue.trim());
-                currEl.textContent = newEl.textContent;
-            }
+            //Updates the TEXT
+            if (!newEl.isEqualNode(currEl) && newEl.firstChild.nodeValue.trim() !== "") currEl.textContent = newEl.textContent;
+            //Updates the ATTRIBUTES
+            if (!newEl.isEqualNode(currEl)) Array.from(newEl.attributes).forEach((attr)=>{
+                currEl.setAttribute(attr.name, attr.value);
+            });
         });
     }
     _clear() {
