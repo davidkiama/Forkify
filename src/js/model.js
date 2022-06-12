@@ -104,3 +104,10 @@ export const removeBookmark = (id) => {
   //Update localstorage
   persistBookmark();
 };
+
+const init = () => {
+  const storage = localStorage.getItem("bookmarks");
+  if (storage) state.bookmarks = JSON.parse(storage);
+};
+
+init();
