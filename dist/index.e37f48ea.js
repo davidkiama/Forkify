@@ -527,6 +527,7 @@ const controlRecipes = async ()=>{
         (0, _recipeViewJsDefault.default).renderSpinner();
         // 0. Upadate the active recipe
         (0, _resultsViewJsDefault.default).update(_modelJs.getSearchResultsPerPage());
+        (0, _bookmarksViewJsDefault.default).update(_modelJs.state.bookmarks);
         // 1. loading the recipe
         await _modelJs.loadRecipe(id);
         // 2. rendering recipe

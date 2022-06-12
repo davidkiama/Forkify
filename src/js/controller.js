@@ -22,6 +22,7 @@ const controlRecipes = async () => {
 
     // 0. Upadate the active recipe
     resultsView.update(model.getSearchResultsPerPage());
+    bookmarksView.update(model.state.bookmarks);
 
     // 1. loading the recipe
     await model.loadRecipe(id);
