@@ -557,7 +557,7 @@ const controlServings = (newServings)=>{
     //update the servings
     _modelJs.updateServings(newServings);
     //update the recipe view
-    (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
+    (0, _recipeViewJsDefault.default).update(_modelJs.state.recipe);
 };
 const init = ()=>{
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
@@ -1405,6 +1405,24 @@ class View {
         const markup = this._generateMarkup();
         this._clear(); // clear the initial text
         this._parentElement.insertAdjacentHTML("afterbegin", markup);
+    }
+    update(data) {
+        if (!data || Array.isArray(data) && data.length == 0) return this.renderError();
+        this._data = data;
+        const newMarkup = this._generateMarkup();
+        //convert markup string to DOM object
+        const newDOM = document.createRange().createContextualFragment(newMarkup);
+        const newElements = newDOM.querySelectorAll("*");
+        const curElements = this._parentElement.querySelectorAll("*");
+        //compare current DOM and virtual DOM
+        newElements.forEach((newEl, i)=>{
+            const currEl = curElements[i];
+            //update the DOM only where it changed
+            if (!newEl.isEqualNode(currEl) && newEl.firstChild.nodeValue.trim() !== "") {
+                console.log(newEl.firstChild?.nodeValue.trim());
+                currEl.textContent = newEl.textContent;
+            }
+        });
     }
     _clear() {
         this._parentElement.innerHTML = "";
