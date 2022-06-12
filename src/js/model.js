@@ -9,6 +9,7 @@ export const state = {
     page: 1,
     resultsPerPage: RES_PER_PAGE,
   },
+  bookmarks: [],
 };
 
 export const loadRecipe = async (id) => {
@@ -28,6 +29,11 @@ export const loadRecipe = async (id) => {
       cookingTime: recipe.cooking_time,
       sourceUrl: recipe.source_url,
     };
+
+    //create new field
+    if (state.bookmarks.some((bookmark) => bookmark.id === id)) {
+      state.recipe.bookmarked = true;
+    } else state.recipe.bookmarked = false;
   } catch (error) {
     //Temp error handling
     throw error;
@@ -70,4 +76,12 @@ export const updateServings = (newServings) => {
   });
 
   state.recipe.servings = newServings;
+};
+
+export const addBookmark = (recipe) => {
+  //Add bookmark
+  state.bookmarks.push(recipe);
+
+  //mark current bookmark
+  if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
 };

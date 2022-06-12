@@ -30,7 +30,7 @@ export default class View {
       //update the DOM only where it changed
 
       //Updates the TEXT
-      if (!newEl.isEqualNode(currEl) && newEl.firstChild.nodeValue.trim() !== "") {
+      if (!newEl.isEqualNode(currEl) && newEl.firstChild?.nodeValue.trim() !== "") {
         currEl.textContent = newEl.textContent;
       }
 
