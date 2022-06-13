@@ -578,6 +578,9 @@ const controlAddBookmark = ()=>{
 const controlBookmarks = ()=>{
     (0, _bookmarksViewJsDefault.default).render(_modelJs.state.bookmarks);
 };
+const controlAddRecipe = (newRecipe)=>{
+    console.log(newRecipe);
+};
 const init = ()=>{
     (0, _bookmarksViewJsDefault.default).addBookmarkHandler(controlBookmarks);
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
@@ -585,6 +588,7 @@ const init = ()=>{
     (0, _recipeViewJsDefault.default).addHandlerBookmark(controlAddBookmark);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchRecipes);
     (0, _paginationViewJsDefault.default).addHandlerClick(controlPagination);
+    (0, _addRecipeViewJsDefault.default).addHandlerUpload(controlAddRecipe);
 };
 init();
 
@@ -1983,6 +1987,16 @@ class AddRecipeView extends (0, _viewDefault.default) {
     _addHandlerHideWindow() {
         this._btnClose.addEventListener("click", this._toggleWindow.bind(this));
         this._overlay.addEventListener("click", this._toggleWindow.bind(this));
+    }
+    addHandlerUpload(handler) {
+        this._parentElement.addEventListener("submit", function(e) {
+            e.preventDefault();
+            const dataArr = [
+                ...new FormData(this)
+            ];
+            const data = Object.fromEntries(dataArr); //convert arr to an obj
+            handler(data);
+        });
     }
 }
 exports.default = new AddRecipeView();
