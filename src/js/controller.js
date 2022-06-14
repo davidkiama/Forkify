@@ -1,4 +1,5 @@
 import * as model from "./model.js";
+import { MODAL_TIMEOUT_SEC } from "./config.js";
 import recipeView from "./views/recipeView.js";
 import searchView from "./views/searchView.js";
 import resultsView from "./views/resultsView.js";
@@ -92,9 +93,20 @@ const controlBookmarks = () => {
 
 const controlAddRecipe = async (newRecipe) => {
   try {
+    addRecipeView.renderSpinner();
+
     await model.uploadRecipe(newRecipe);
 
-    console.log(model.state.recipe);
+    //Render the recipe
+    recipeView.render(model.state.recipe);
+
+    // success message
+    addRecipeView.renderSuccess();
+
+    //close recipe modal
+    setTimeout(() => {
+      addRecipeView.toggleWindow();
+    }, MODAL_TIMEOUT_SEC * 1000);
   } catch (error) {
     addRecipeView.renderError(error);
   }

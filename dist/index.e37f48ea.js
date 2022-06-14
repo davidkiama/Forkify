@@ -505,6 +505,7 @@ function hmrAcceptRun(bundle, id) {
 },{}],"aenu9":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _modelJs = require("./model.js");
+var _configJs = require("./config.js");
 var _recipeViewJs = require("./views/recipeView.js");
 var _recipeViewJsDefault = parcelHelpers.interopDefault(_recipeViewJs);
 var _searchViewJs = require("./views/searchView.js");
@@ -580,8 +581,16 @@ const controlBookmarks = ()=>{
 };
 const controlAddRecipe = async (newRecipe)=>{
     try {
+        (0, _addRecipeViewJsDefault.default).renderSpinner();
         await _modelJs.uploadRecipe(newRecipe);
-        console.log(_modelJs.state.recipe);
+        //Render the recipe
+        (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
+        // success message
+        (0, _addRecipeViewJsDefault.default).renderSuccess();
+        //close recipe modal
+        setTimeout(()=>{
+            (0, _addRecipeViewJsDefault.default).toggleWindow();
+        }, (0, _configJs.MODAL_TIMEOUT_SEC) * 1000);
     } catch (error) {
         (0, _addRecipeViewJsDefault.default).renderError(error);
     }
@@ -597,7 +606,7 @@ const init = ()=>{
 };
 init();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./model.js":"Y4A21","./views/recipeView.js":"l60JC","./views/searchView.js":"9OQAM","./views/resultsView.js":"cSbZE","./views/bookmarksView.js":"4Lqzq","./views/paginationView.js":"6z7bi","./views/addRecipeView.js":"i6DNj"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./model.js":"Y4A21","./views/recipeView.js":"l60JC","./views/searchView.js":"9OQAM","./views/resultsView.js":"cSbZE","./views/bookmarksView.js":"4Lqzq","./views/paginationView.js":"6z7bi","./views/addRecipeView.js":"i6DNj","./config.js":"k5Hzs"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
@@ -771,10 +780,12 @@ parcelHelpers.export(exports, "API_URL", ()=>API_URL);
 parcelHelpers.export(exports, "TIMEOUT_SECONDS", ()=>TIMEOUT_SECONDS);
 parcelHelpers.export(exports, "RES_PER_PAGE", ()=>RES_PER_PAGE);
 parcelHelpers.export(exports, "API_KEY", ()=>API_KEY);
+parcelHelpers.export(exports, "MODAL_TIMEOUT_SEC", ()=>MODAL_TIMEOUT_SEC);
 const API_URL = "https://forkify-api.herokuapp.com/api/v2/recipes/";
 const TIMEOUT_SECONDS = 10;
 const RES_PER_PAGE = 10;
 const API_KEY = "39c25e7f-29ad-4afb-ad04-78700e08b4c6";
+const MODAL_TIMEOUT_SEC = 2.5;
 
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hGI1E":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -2034,6 +2045,7 @@ var _iconsSvg = require("url:../../img/icons.svg");
 var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 class AddRecipeView extends (0, _viewDefault.default) {
     _parentElement = document.querySelector(".upload");
+    _successMessage = "Recipe was successfully added.";
     _window = document.querySelector(".add-recipe-window");
     _overlay = document.querySelector(".overlay");
     _btnOpen = document.querySelector(".nav__btn--add-recipe");
@@ -2043,16 +2055,16 @@ class AddRecipeView extends (0, _viewDefault.default) {
         this._addHandlerShowWindow();
         this._addHandlerHideWindow();
     }
-    _toggleWindow() {
+    toggleWindow() {
         this._overlay.classList.toggle("hidden");
         this._window.classList.toggle("hidden");
     }
     _addHandlerShowWindow() {
-        this._btnOpen.addEventListener("click", this._toggleWindow.bind(this));
+        this._btnOpen.addEventListener("click", this.toggleWindow.bind(this));
     }
     _addHandlerHideWindow() {
-        this._btnClose.addEventListener("click", this._toggleWindow.bind(this));
-        this._overlay.addEventListener("click", this._toggleWindow.bind(this));
+        this._btnClose.addEventListener("click", this.toggleWindow.bind(this));
+        this._overlay.addEventListener("click", this.toggleWindow.bind(this));
     }
     addHandlerUpload(handler) {
         this._parentElement.addEventListener("submit", function(e) {
