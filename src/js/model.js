@@ -23,6 +23,7 @@ const createRecipeObject = (data) => {
     image: recipe.image_url,
     cookingTime: recipe.cooking_time,
     sourceUrl: recipe.source_url,
+    ...(recipe.key && { key: recipe.key }),
   };
 };
 
@@ -142,8 +143,9 @@ export const uploadRecipe = async (newRecipe) => {
     const data = await sendJSON(`${API_URL}?key=${API_KEY}`, recipe);
 
     //format the underscore notation to camelCase
-
     state.recipe = createRecipeObject(data);
+
+    addBookmark(state.recipe);
   } catch (error) {
     throw error;
   }
