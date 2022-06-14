@@ -1,3 +1,4 @@
+import { async } from "regenerator-runtime";
 import { API_URL, RES_PER_PAGE } from "./config";
 import { getJSON } from "./helpers";
 
@@ -111,3 +112,29 @@ const init = () => {
 };
 
 init();
+
+//Upload data
+export const uploadRecipe = async (newRecipe) => {
+  /*
+  console.log(Object.entries(newRecipe));
+
+    0: (2) ['title', 'TEST']
+    1: (2) ['sourceUrl', 'TEST']
+    2: (2) ['image', 'TEST']
+    3: (2) ['publisher', 'TEST']
+    4: (2) ['cookingTime', '23']
+    5: (2) ['servings', '23']
+    6: (2) ['ingredient-1', '0.5,kg,Rice']
+    7: (2) ['ingredient-2', '1,,Avocado']
+    8: (2) ['ingredient-3', ',,salt']
+    9: (2) ['ingredient-4', '']
+    10: (2) ['ingredient-5', '']
+    11: (2) ['ingredient-6', '']
+  */
+  //filter all ingredients that are not empty strings
+  const ingredients = Object.entries(newRecipe).filter(
+    (entry) => entry[0].startsWith("ingredient") && entry[1] !== ""
+  );
+
+  console.log(ingredients);
+};
