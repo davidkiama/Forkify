@@ -578,9 +578,12 @@ const controlAddBookmark = ()=>{
 const controlBookmarks = ()=>{
     (0, _bookmarksViewJsDefault.default).render(_modelJs.state.bookmarks);
 };
-const controlAddRecipe = (newRecipe)=>{
-    console.log(newRecipe);
-    _modelJs.uploadRecipe(newRecipe);
+const controlAddRecipe = async (newRecipe)=>{
+    try {
+        await _modelJs.uploadRecipe(newRecipe);
+    } catch (error) {
+        (0, _addRecipeViewJsDefault.default).renderError(error);
+    }
 };
 const init = ()=>{
     (0, _bookmarksViewJsDefault.default).addBookmarkHandler(controlBookmarks);
@@ -726,31 +729,21 @@ const init = ()=>{
 };
 init();
 const uploadRecipe = async (newRecipe)=>{
-    /*
-  console.log(Object.entries(newRecipe));
-
-    0: (2) ['title', 'TEST']
-    1: (2) ['sourceUrl', 'TEST']
-    2: (2) ['image', 'TEST']
-    3: (2) ['publisher', 'TEST']
-    4: (2) ['cookingTime', '23']
-    5: (2) ['servings', '23']
-    6: (2) ['ingredient-1', '0.5,kg,Rice']
-    7: (2) ['ingredient-2', '1,,Avocado']
-    8: (2) ['ingredient-3', ',,salt']
-    9: (2) ['ingredient-4', '']
-    10: (2) ['ingredient-5', '']
-    11: (2) ['ingredient-6', '']
-  */ //filter all ingredients that are not empty strings
-    const ingredients = Object.entries(newRecipe).filter((entry)=>entry[0].startsWith("ingredient") && entry[1] !== "").map((ing)=>{
-        const [quantity, unit, description] = ing[1].replaceAll(" ", "").split(",");
-        return {
-            quantity: quantity ? +quantity : null,
-            unit,
-            description
-        };
-    });
-    console.log(ingredients);
+    try {
+        const ingredients = Object.entries(newRecipe).filter((entry)=>entry[0].startsWith("ingredient") && entry[1] !== "").map((ing)=>{
+            const ingArr = ing[1].replaceAll(" ", "").split(",");
+            if (ingArr.length !== 3) throw new Error("Wrong format. Please use the correct format.");
+            const [quantity, unit, description] = ingArr;
+            return {
+                quantity: quantity ? +quantity : null,
+                unit,
+                description
+            };
+        });
+        console.log(ingredients);
+    } catch (error) {
+        throw error;
+    }
 };
 
 },{"regenerator-runtime":"dXNgZ","./config":"k5Hzs","./helpers":"hGI1E","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dXNgZ":[function(require,module,exports) {
