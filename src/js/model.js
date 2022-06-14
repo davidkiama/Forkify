@@ -132,9 +132,11 @@ export const uploadRecipe = async (newRecipe) => {
     11: (2) ['ingredient-6', '']
   */
   //filter all ingredients that are not empty strings
-  const ingredients = Object.entries(newRecipe).filter(
-    (entry) => entry[0].startsWith("ingredient") && entry[1] !== ""
-  );
-
+  const ingredients = Object.entries(newRecipe)
+    .filter((entry) => entry[0].startsWith("ingredient") && entry[1] !== "")
+    .map((ing) => {
+      const [quantity, unit, description] = ing[1].replaceAll(" ", "").split(",");
+      return { quantity: quantity ? +quantity : null, unit, description };
+    });
   console.log(ingredients);
 };
