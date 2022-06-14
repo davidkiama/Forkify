@@ -12,23 +12,26 @@ export const state = {
   bookmarks: [],
 };
 
+const createRecipeObject = (data) => {
+  const { recipe } = data.data;
+  return {
+    id: recipe.id,
+    title: recipe.title,
+    ingredients: recipe.ingredients,
+    publisher: recipe.publisher,
+    servings: recipe.servings,
+    image: recipe.image_url,
+    cookingTime: recipe.cooking_time,
+    sourceUrl: recipe.source_url,
+  };
+};
+
 export const loadRecipe = async (id) => {
   try {
-    const { data } = await getJSON(`${API_URL}${id}`);
-
-    const { recipe } = data;
+    const data = await getJSON(`${API_URL}${id}`);
 
     //format the underscore notation to camelCase
-    state.recipe = {
-      id: recipe.id,
-      title: recipe.title,
-      ingredients: recipe.ingredients,
-      publisher: recipe.publisher,
-      servings: recipe.servings,
-      image: recipe.image_url,
-      cookingTime: recipe.cooking_time,
-      sourceUrl: recipe.source_url,
-    };
+    state.recipe = createRecipeObject(data);
 
     //create new field
     if (state.bookmarks.some((bookmark) => bookmark.id === id)) {
@@ -137,7 +140,10 @@ export const uploadRecipe = async (newRecipe) => {
     };
 
     const data = await sendJSON(`${API_URL}?key=${API_KEY}`, recipe);
-    console.log(data);
+
+    //format the underscore notation to camelCase
+
+    state.recipe = createRecipeObject(data);
   } catch (error) {
     throw error;
   }
