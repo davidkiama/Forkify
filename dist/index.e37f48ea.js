@@ -587,6 +587,10 @@ const controlAddRecipe = async (newRecipe)=>{
         (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
         // success message
         (0, _addRecipeViewJsDefault.default).renderSuccess();
+        //Re render the bookmarks
+        (0, _bookmarksViewJsDefault.default).render(_modelJs.state.bookmarks);
+        //change ID url
+        window.history.pushState(null, "", `#${_modelJs.state.recipe.id}`);
         //close recipe modal
         setTimeout(()=>{
             (0, _addRecipeViewJsDefault.default).toggleWindow();
@@ -606,7 +610,7 @@ const init = ()=>{
 };
 init();
 
-},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./model.js":"Y4A21","./views/recipeView.js":"l60JC","./views/searchView.js":"9OQAM","./views/resultsView.js":"cSbZE","./views/bookmarksView.js":"4Lqzq","./views/paginationView.js":"6z7bi","./views/addRecipeView.js":"i6DNj","./config.js":"k5Hzs"}],"gkKU3":[function(require,module,exports) {
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./model.js":"Y4A21","./config.js":"k5Hzs","./views/recipeView.js":"l60JC","./views/searchView.js":"9OQAM","./views/resultsView.js":"cSbZE","./views/bookmarksView.js":"4Lqzq","./views/paginationView.js":"6z7bi","./views/addRecipeView.js":"i6DNj"}],"gkKU3":[function(require,module,exports) {
 exports.interopDefault = function(a) {
     return a && a.__esModule ? a : {
         default: a
