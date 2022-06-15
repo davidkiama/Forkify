@@ -23,13 +23,13 @@ const createRecipeObject = (data) => {
     image: recipe.image_url,
     cookingTime: recipe.cooking_time,
     sourceUrl: recipe.source_url,
-    ...(recipe.key && { key: recipe.key }),
+    ...(recipe.key && { key: recipe.key }), //conditionally add entry in objects
   };
 };
 
 export const loadRecipe = async (id) => {
   try {
-    const data = await AJAX(`${API_URL}${id}`);
+    const data = await AJAX(`${API_URL}${id}?key=${API_KEY}`);
 
     //format the underscore notation to camelCase
     state.recipe = createRecipeObject(data);
@@ -48,7 +48,7 @@ export const loadSearchResults = async (query) => {
   try {
     state.search.query = query;
 
-    const { data } = await AJAX(`${API_URL}?search=${query}`);
+    const { data } = await AJAX(`${API_URL}?search=${query}&key=${API_KEY}`);
 
     state.search.results = data.recipes.map((recipe) => {
       return {
@@ -56,6 +56,7 @@ export const loadSearchResults = async (query) => {
         title: recipe.title,
         publisher: recipe.publisher,
         image: recipe.image_url,
+        ...(recipe.key && { key: recipe.key }),
       };
     });
     state.search.page = 1; //resetting the page num

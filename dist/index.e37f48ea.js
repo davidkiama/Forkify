@@ -681,7 +681,7 @@ const createRecipeObject = (data)=>{
 };
 const loadRecipe = async (id)=>{
     try {
-        const data = await (0, _helpers.AJAX)(`${(0, _config.API_URL)}${id}`);
+        const data = await (0, _helpers.AJAX)(`${(0, _config.API_URL)}${id}?key=${(0, _config.API_KEY)}`);
         //format the underscore notation to camelCase
         state.recipe = createRecipeObject(data);
         //create new field
@@ -695,13 +695,16 @@ const loadRecipe = async (id)=>{
 const loadSearchResults = async (query)=>{
     try {
         state.search.query = query;
-        const { data  } = await (0, _helpers.AJAX)(`${(0, _config.API_URL)}?search=${query}`);
+        const { data  } = await (0, _helpers.AJAX)(`${(0, _config.API_URL)}?search=${query}&key=${(0, _config.API_KEY)}`);
         state.search.results = data.recipes.map((recipe)=>{
             return {
                 id: recipe.id,
                 title: recipe.title,
                 publisher: recipe.publisher,
-                image: recipe.image_url
+                image: recipe.image_url,
+                ...recipe.key && {
+                    key: recipe.key
+                }
             };
         });
         state.search.page = 1; //resetting the page num
@@ -1492,7 +1495,7 @@ class RecipeView extends (0, _viewDefault.default) {
         </div>
       </div>
 
-      <div class="recipe__user-generated">
+      <div class="recipe__user-generated   ${this._data.key ? "" : "hidden"}">
         <svg>
           <use href="${0, _iconsSvgDefault.default}#icon-user"></use>
         </svg>
@@ -1957,6 +1960,8 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
+var _iconsSvg = require("url:../../img/icons.svg"); //Parcel 2
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 class PreviewView extends (0, _viewDefault.default) {
     _parentElement = "";
     _generateMarkup(result) {
@@ -1973,6 +1978,12 @@ class PreviewView extends (0, _viewDefault.default) {
             <div class="preview__data">
                 <h4 class="preview__title">${this._data.title}</h4>
                 <p class="preview__publisher">${this._data.publisher}</p> 
+
+                <div class="preview__user-generated ${this._data.key ? "" : "hidden"}">
+                  <svg>
+                    <use href="${0, _iconsSvgDefault.default}#icon-user"></use>
+                  </svg>
+                </div>
             </div>
             </a>
         </li>
@@ -1981,7 +1992,7 @@ class PreviewView extends (0, _viewDefault.default) {
 }
 exports.default = new PreviewView();
 
-},{"./View":"5cUXS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"4Lqzq":[function(require,module,exports) {
+},{"./View":"5cUXS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../../img/icons.svg":"loVOp"}],"4Lqzq":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _previewView = require("./previewView");
