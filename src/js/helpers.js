@@ -9,10 +9,17 @@ const timeout = function (s) {
   });
 };
 
-export const getJSON = async (url) => {
+export const AJAX = async (url, uploadData = undefined) => {
   try {
-    //implement timeout after some time
-    const fetchPro = fetch(url);
+    const fetchPro = uploadData
+      ? fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(uploadData),
+        })
+      : fetch(url);
 
     const res = await Promise.race([fetchPro, timeout(TIMEOUT_SECONDS)]);
     const data = await res.json();
@@ -25,25 +32,41 @@ export const getJSON = async (url) => {
   }
 };
 
-export const sendJSON = async (url, uploadData) => {
-  try {
-    //implement timeout after some time
+// export const getJSON = async (url) => {
+//   try {
+//     //implement timeout after some time
+//     const fetchPro = fetch(url);
 
-    const fetchPro = fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(uploadData),
-    });
+//     const res = await Promise.race([fetchPro, timeout(TIMEOUT_SECONDS)]);
+//     const data = await res.json();
 
-    const res = await Promise.race([fetchPro, timeout(TIMEOUT_SECONDS)]);
-    const data = await res.json();
+//     if (!res.ok) throw new Error(`${data.message}, (${res.status})`);
 
-    if (!res.ok) throw new Error(`${data.message}, (${res.status})`);
+//     return data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
+// export const sendJSON = async (url, uploadData) => {
+//   try {
+//     //implement timeout after some time
+
+//     const fetchPro = fetch(url, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(uploadData),
+//     });
+
+//     const res = await Promise.race([fetchPro, timeout(TIMEOUT_SECONDS)]);
+//     const data = await res.json();
+
+//     if (!res.ok) throw new Error(`${data.message}, (${res.status})`);
+
+//     return data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };

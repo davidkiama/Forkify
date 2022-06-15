@@ -681,7 +681,7 @@ const createRecipeObject = (data)=>{
 };
 const loadRecipe = async (id)=>{
     try {
-        const data = await (0, _helpers.getJSON)(`${(0, _config.API_URL)}${id}`);
+        const data = await (0, _helpers.AJAX)(`${(0, _config.API_URL)}${id}`);
         //format the underscore notation to camelCase
         state.recipe = createRecipeObject(data);
         //create new field
@@ -695,7 +695,7 @@ const loadRecipe = async (id)=>{
 const loadSearchResults = async (query)=>{
     try {
         state.search.query = query;
-        const { data  } = await (0, _helpers.getJSON)(`${(0, _config.API_URL)}?search=${query}`);
+        const { data  } = await (0, _helpers.AJAX)(`${(0, _config.API_URL)}?search=${query}`);
         state.search.results = data.recipes.map((recipe)=>{
             return {
                 id: recipe.id,
@@ -768,7 +768,7 @@ const uploadRecipe = async (newRecipe)=>{
             source_url: newRecipe.sourceUrl,
             ingredients
         };
-        const data = await (0, _helpers.sendJSON)(`${(0, _config.API_URL)}?key=${(0, _config.API_KEY)}`, recipe);
+        const data = await (0, _helpers.AJAX)(`${(0, _config.API_URL)}?key=${(0, _config.API_KEY)}`, recipe);
         //format the underscore notation to camelCase
         state.recipe = createRecipeObject(data);
         addBookmark(state.recipe);
@@ -794,8 +794,7 @@ const MODAL_TIMEOUT_SEC = 2.5;
 },{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"hGI1E":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "getJSON", ()=>getJSON);
-parcelHelpers.export(exports, "sendJSON", ()=>sendJSON);
+parcelHelpers.export(exports, "AJAX", ()=>AJAX);
 var _regeneratorRuntime = require("regenerator-runtime");
 var _config = require("./config");
 const timeout = function(s) {
@@ -805,31 +804,15 @@ const timeout = function(s) {
         }, s * 1000);
     });
 };
-const getJSON = async (url)=>{
+const AJAX = async (url, uploadData)=>{
     try {
-        //implement timeout after some time
-        const fetchPro = fetch(url);
-        const res = await Promise.race([
-            fetchPro,
-            timeout((0, _config.TIMEOUT_SECONDS))
-        ]);
-        const data = await res.json();
-        if (!res.ok) throw new Error(`${data.message}, (${res.status})`);
-        return data;
-    } catch (error) {
-        throw error;
-    }
-};
-const sendJSON = async (url, uploadData)=>{
-    try {
-        //implement timeout after some time
-        const fetchPro = fetch(url, {
+        const fetchPro = uploadData ? fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(uploadData)
-        });
+        }) : fetch(url);
         const res = await Promise.race([
             fetchPro,
             timeout((0, _config.TIMEOUT_SECONDS))
@@ -840,7 +823,36 @@ const sendJSON = async (url, uploadData)=>{
     } catch (error) {
         throw error;
     }
-};
+}; // export const getJSON = async (url) => {
+ //   try {
+ //     //implement timeout after some time
+ //     const fetchPro = fetch(url);
+ //     const res = await Promise.race([fetchPro, timeout(TIMEOUT_SECONDS)]);
+ //     const data = await res.json();
+ //     if (!res.ok) throw new Error(`${data.message}, (${res.status})`);
+ //     return data;
+ //   } catch (error) {
+ //     throw error;
+ //   }
+ // };
+ // export const sendJSON = async (url, uploadData) => {
+ //   try {
+ //     //implement timeout after some time
+ //     const fetchPro = fetch(url, {
+ //       method: "POST",
+ //       headers: {
+ //         "Content-Type": "application/json",
+ //       },
+ //       body: JSON.stringify(uploadData),
+ //     });
+ //     const res = await Promise.race([fetchPro, timeout(TIMEOUT_SECONDS)]);
+ //     const data = await res.json();
+ //     if (!res.ok) throw new Error(`${data.message}, (${res.status})`);
+ //     return data;
+ //   } catch (error) {
+ //     throw error;
+ //   }
+ // };
 
 },{"regenerator-runtime":"dXNgZ","./config":"k5Hzs","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dXNgZ":[function(require,module,exports) {
 /**
