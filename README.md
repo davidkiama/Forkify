@@ -9,20 +9,19 @@ A web application that users can users to view different recipes.
 Users can search for recipes, bookmark favourite recipes and add new recipes too.
 
 ### Vanilla search
-![vanilla_search](https://user-images.githubusercontent.com/38817867/174123396-cf481c74-bc73-4dbe-a917-72c1b5aaf84f.png)
 
+![vanilla_search](https://user-images.githubusercontent.com/38817867/174123396-cf481c74-bc73-4dbe-a917-72c1b5aaf84f.png)
 
 ### Bookmarks
 
 ![bookmarks](https://user-images.githubusercontent.com/38817867/174123682-f263fba3-5a22-4711-a9b1-735d4f0f3a50.png)
 
-
 As it is, if a user adds a new recipe it will be visible globally since the
 deployed sends requests using my key.
 
 ### Add recipe
-![add_recipe](https://user-images.githubusercontent.com/38817867/174123290-032e086c-a326-44aa-ac6e-a890efcaf5c8.png)
 
+![add_recipe](https://user-images.githubusercontent.com/38817867/174123290-032e086c-a326-44aa-ac6e-a890efcaf5c8.png)
 
 You can clone this project and use you own token. With this you won't see recipes
 added by other users and other user won't be able to see recipes that you upload.
@@ -40,7 +39,7 @@ added by other users and other user won't be able to see recipes that you upload
 
 ## Author
 
-[David Kiama](https://github.com/davidkiama) x Jonas
+[Jonas Schmedtmann](https://github.com/jonasschmedtmann) x [David Kiama](https://github.com/davidkiama)
 
 ## Project setup and instructions
 
