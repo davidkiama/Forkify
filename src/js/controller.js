@@ -8,8 +8,8 @@ import paginationView from "./views/paginationView.js";
 import addRecipeView from "./views/addRecipeView.js";
 
 //Polyfilling
-// import "core-js/stable";
-// import "regenerator-runtime/runtime";
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
 ///////////////////////////////////////
 
